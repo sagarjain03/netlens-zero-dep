@@ -5,3 +5,4 @@ dist/
 .netlens-progress.json
 .playwright-mcp/
 .env
+docs/
