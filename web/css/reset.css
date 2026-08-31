@@ -44,6 +44,54 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
   outline-offset: 2px;
 }
 
+/*
+ * ── scrollbars ─────────────────────────────────────────────────────────────
+ *
+ * Every pane in this app scrolls inside itself, so the default scrollbar was
+ * showing up a dozen times over: a grey rounded capsule in a grey trough, in an
+ * interface that has no rounded corners and no grey troughs anywhere else.
+ *
+ * These follow the same rules as the rest of the surface — square, hairline
+ * thin, drawn in theme tokens so they re-theme with everything else — and they
+ * stay quiet until they are being used. Idle, the thumb is two steps above the
+ * background and the track is not painted at all, so a pane that happens to
+ * overflow reads as a single mark down its edge rather than a stripe. Hovering
+ * the pane lifts it, hovering the bar lifts it again, dragging turns it the
+ * accent colour.
+ */
+
+/* Firefox has no pseudo-elements for this; these two properties are the whole
+   API it offers, and they get the same colours. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) transparent;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+
+/* No trough, no corner block — the pane's own background shows through. */
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner { background: transparent; }
+
+::-webkit-scrollbar-thumb {
+  /* background-color, not the `background` shorthand: the shorthand would reset
+     background-clip and the inset below would be lost. */
+  background-color: var(--scroll-thumb);
+  /* A transparent border plus padding-box clipping leaves a 6px bar inside a
+     10px gutter, which is a rule rather than a capsule. */
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Brighten for whoever is actually reaching for it. */
+:hover::-webkit-scrollbar-thumb { background-color: var(--scroll-thumb-live); }
+::-webkit-scrollbar-thumb:hover { background-color: var(--fg-2); }
+::-webkit-scrollbar-thumb:active { background-color: var(--accent); }
+
+/* No stepper arrows at the ends. Chrome only draws them when they are given a
+   size, but Edge on Windows will, and one OS-blue triangle undoes the lot. */
+::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

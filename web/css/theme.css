@@ -68,6 +68,11 @@
 
   --shadow: none;
   --grid-line: rgba(255, 255, 255, 0.022);
+
+  /* Scrollbars. Two steps below the hairline so an idle bar is a mark, not a
+     stripe; the pane it belongs to lifts it on hover. See reset.css. */
+  --scroll-thumb:      #2a2a2a;
+  --scroll-thumb-live: #3d3d3d;
 }
 
 /* ── light ───────────────────────────────────────────────────────────── */
@@ -101,6 +106,9 @@
 
   --shadow: none;
   --grid-line: rgba(0, 0, 0, 0.03);
+
+  --scroll-thumb:      #dcdcd8;
+  --scroll-thumb-live: #bfbfba;
 }
 
 body {
