@@ -1,0 +1,9 @@
+
+Active Connections
+
+  Proto  Local Address          Foreign Address        State
+  TCP    127.0.0.1:5354         127.0.0.1:49669        ESTABLISHED
+  TCP    192.168.1.35:51982     140.82.113.4:443       ESTABLISHED
+  TCP    192.168.1.35:51990     104.16.132.229:443     TIME_WAIT
+  TCP    192.168.1.35:52001     57.144.150.1:443       ESTABLISHED
+  TCP    127.0.0.1:7801         127.0.0.1:51986        FIN_WAIT_2

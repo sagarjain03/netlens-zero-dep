@@ -1,0 +1,115 @@
+/* ── the guided tour ───────────────────────────────────────────────────
+ *
+ * Everything dims except the one thing being talked about. The dimming is a
+ * single enormous box-shadow spread from the highlight, which means one
+ * element instead of four panels that have to be kept in agreement.
+ */
+
+.tour {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+}
+
+/* The cut-out. The shadow paints everything outside it. */
+.tour__hole {
+  position: fixed;
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.72);
+  pointer-events: none;
+  transition: left var(--t-med), top var(--t-med), width var(--t-med), height var(--t-med);
+}
+
+/* A step with no target dims the whole window instead. */
+.tour__dim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  pointer-events: none;
+}
+
+.tour__box {
+  position: fixed;
+  width: min(380px, calc(100vw - 32px));
+  background: var(--bg-1);
+  border: 1px solid var(--accent-dim);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+  animation: tour-in var(--t-med) both;
+}
+
+@keyframes tour-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tour__box { animation: none; }
+  .tour__hole { transition: none; }
+}
+
+.tour__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px var(--sp-3);
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--line);
+}
+.tour__count {
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  color: var(--fg-2);
+  font-variant-numeric: tabular-nums;
+}
+/* Same weight as Next. Leaving is not meant to be the hard option. */
+.tour__skip {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--fg-2);
+  border: 1px solid var(--line);
+  padding: 2px 9px;
+  transition: color var(--t-fast), border-color var(--t-fast);
+}
+.tour__skip:hover { color: var(--err); border-color: var(--err); }
+
+.tour__title {
+  margin: 0;
+  padding: var(--sp-3) var(--sp-3) 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+.tour__text {
+  margin: 0;
+  padding: var(--sp-2) var(--sp-3) var(--sp-3);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--fg-1);
+}
+
+.tour__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3) var(--sp-3);
+  border-top: 1px solid var(--line-soft);
+}
+.tour__btn {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg-1);
+  padding: 5px 12px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast);
+}
+.tour__btn:hover { border-color: var(--accent); color: var(--accent); }
+.tour__btn--next {
+  border-color: var(--accent-dim);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tour__btn--next:hover { background: var(--accent); color: var(--bg); }

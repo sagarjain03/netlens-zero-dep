@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>netlens — see every byte</title>
+<meta name="description" content="Learn computer networking with real packets you can open, edit, break and re-send. Zero dependencies.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%94%8D%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/css/reset.css">
+<link rel="stylesheet" href="/css/theme.css">
+<link rel="stylesheet" href="/css/app.css">
+<link rel="stylesheet" href="/css/lesson.css">
+<link rel="stylesheet" href="/css/lab.css">
+<link rel="stylesheet" href="/css/tour.css">
+</head>
+<body>
+
+<div id="app" class="app">
+
+  <!-- ── header ─────────────────────────────────────────────────────── -->
+  <header class="hdr">
+    <button class="iconbtn hdr__burger" id="btn-nav" aria-expanded="true"
+            aria-controls="sidebar" title="Chapters (M)">&#9776;</button>
+    <div class="hdr__brand">
+      <span class="hdr__name">NETLENS<span class="hdr__cursor">_</span></span>
+      <span class="hdr__ver">v1.0.0 // ZERO_DEP</span>
+    </div>
+    <nav class="crumbs" id="hdr-chapter" aria-label="location"></nav>
+    <div class="hdr__right">
+      <span class="tag tag--ok" id="stat-net">NET: OK</span>
+      <span class="tag tag--info" id="stat-deps">DEPS: 0</span>
+      <div class="progress" id="progress-dots" aria-label="chapter progress"></div>
+      <button class="iconbtn" id="btn-lang" title="Language">EN</button>
+      <button class="iconbtn" id="btn-lesson" title="Show the lesson (L)">📖</button>
+      <button class="iconbtn" id="btn-theme" title="Toggle theme">◐</button>
+      <button class="iconbtn" id="btn-help" title="Help">?</button>
+    </div>
+  </header>
+
+  <!-- ── sidebar ────────────────────────────────────────────────────── -->
+  <nav class="side" id="sidebar">
+   <div class="side__inner">
+    <div class="side__tabs" id="side-tabs" role="tablist"></div>
+
+    <div class="side__pane" id="pane-journey">
+      <div class="side__label">Chapters</div>
+      <ul class="chapters" id="chapter-list"></ul>
+
+      <div class="side__label side__label--sep">Depth</div>
+      <ul class="tiers" id="tier-list"></ul>
+    </div>
+
+    <div class="side__pane" id="pane-topics" hidden>
+      <div class="side__label">Syllabus <span class="side__count" id="topic-count"></span></div>
+      <div class="topics" id="topic-list"></div>
+    </div>
+
+    <div class="side__foot">
+      <div class="statblock">
+        <div class="statblock__mark">0</div>
+        <div class="statblock__body">
+          <div class="statblock__name" id="dep-badge">DEPENDENCIES</div>
+          <div class="statblock__meta" id="side-meta">CONNECTING<span class="blip"></span></div>
+        </div>
+      </div>
+    </div>
+   </div>
+  </nav>
+
+  <!-- ── stage: canvas + narration + timeline ───────────────────────── -->
+  <main class="stage">
+    <section class="viz" id="viz">
+      <canvas id="canvas"></canvas>
+      <div class="viz__watermark" id="viz-watermark" aria-hidden="true">01</div>
+      <div class="lab" id="lab" hidden></div>
+      <div class="viz__empty" id="viz-empty">
+        <div class="viz__emptyLabel">AWAITING_INPUT</div>
+        <p>Type a command below to send a <strong>real</strong> packet.</p>
+        <p class="viz__hint">try <code>dig facebook.com</code></p>
+      </div>
+    </section>
+
+    <div class="narration" id="narration" hidden></div>
+
+    <section class="timeline" id="timeline" hidden>
+      <div class="timeline__head">PACKET_TIMELINE</div>
+      <ol class="timeline__list" id="timeline-list"></ol>
+    </section>
+  </main>
+
+  <!-- ── inspector: field tree + hex (tier 3 only) ──────────────────── -->
+  <aside class="inspector" id="inspector" hidden>
+    <div class="itoolbar">
+      <div class="ptabs" id="packet-tabs" role="tablist"></div>
+      <span class="itoolbar__meta" id="tree-meta"></span>
+    </div>
+
+    <div class="pane pane--tree">
+      <div class="pane__body" id="field-tree"></div>
+      <div class="explainbox" id="explain-box" hidden></div>
+    </div>
+
+    <div class="pane pane--hex">
+      <div class="pane__head">
+        <span>HEX_DUMP</span>
+        <span class="pane__meta" id="hex-meta"></span>
+      </div>
+      <div class="pane__body" id="hex-view"></div>
+      <div class="bits" id="bit-view" hidden></div>
+      <div class="editbar" id="edit-bar" hidden></div>
+    </div>
+  </aside>
+
+  <div class="ask" id="ask"></div>
+
+  <!-- the guided tour, on top of everything -->
+  <div class="tour" id="tour" hidden></div>
+
+  <!-- ── terminal ───────────────────────────────────────────────────── -->
+  <section class="term" id="term">
+    <div class="term__grip" id="term-grip" role="separator" aria-orientation="horizontal"
+         aria-label="Resize terminal — drag, double-click, or use arrow keys" tabindex="0"
+         title="Drag to resize · double-click to expand"></div>
+    <div class="term__out" id="term-out" tabindex="0"></div>
+    <div class="term__inputRow">
+      <span class="term__prompt">$</span>
+      <span class="term__line" id="term-line"><span class="term__cursor"></span></span>
+      <span class="term__hint" id="term-hint"></span>
+    </div>
+    <input id="term-input" class="term__hidden" autocomplete="off" autocapitalize="off"
+           autocorrect="off" spellcheck="false" aria-label="terminal input">
+  </section>
+
+</div>
+
+<!-- Fixed to the viewport, not to the canvas: it is dragged anywhere. -->
+<div class="lesson" id="lesson" hidden></div>
+
+<script type="module" src="/js/main.js"></script>
+</body>
+</html>

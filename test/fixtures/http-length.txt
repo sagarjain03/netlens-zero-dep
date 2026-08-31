@@ -1,0 +1,7 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 23
+Cache-Control: max-age=300
+ETag: "abc123"
+
+{"ok":true,"answer":42}

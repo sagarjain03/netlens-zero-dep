@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>netlens — network builder</title>
+<meta name="description" content="Drag devices, wire them together, then run real packets through the network you built.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%94%8C%3C/text%3E%3C/svg%3E">
+
+<link rel="stylesheet" href="/css/reset.css">
+<link rel="stylesheet" href="/css/theme.css">
+<!-- Everything below is new and lives only in this one file. -->
+<link rel="stylesheet" href="/css/builder.css">
+</head>
+<body class="bd">
+
+<header class="bd-hdr">
+  <a class="bd-brand" href="/">
+    <span class="bd-brand__name">NETLENS<span class="bd-brand__cursor">_</span></span>
+  </a>
+  <span class="bd-hdr__title">NETWORK_BUILDER</span>
+
+  <div class="bd-tools" id="tools">
+    <button class="bd-tool is-on" data-tool="select" title="Select / move (V)">✥ SELECT</button>
+    <button class="bd-tool" data-tool="cable" title="Draw a cable (C)">⌁ CABLE</button>
+    <button class="bd-tool" data-tool="pdu" title="Send a packet and watch it travel (P)">✉ SEND PACKET</button>
+    <button class="bd-tool" data-tool="delete" title="Delete (X)">✕ DELETE</button>
+  </div>
+
+  <label class="bd-cable-kind">
+    MEDIA
+    <select id="cable-kind"></select>
+  </label>
+
+  <div class="bd-hdr__right">
+    <span class="bd-tag" id="stat-count">0 DEVICES</span>
+    <button class="bd-btn is-on" id="btn-tutor">📘 LESSONS</button>
+    <button class="bd-btn" id="btn-example">EXAMPLE</button>
+    <button class="bd-btn" id="btn-save">SAVE</button>
+    <button class="bd-btn" id="btn-load">LOAD</button>
+    <button class="bd-btn bd-btn--warn" id="btn-clear">CLEAR</button>
+  </div>
+</header>
+
+<main class="bd-main">
+
+  <!-- ── left: the parts bin ──────────────────────────────────────────── -->
+  <aside class="bd-palette" id="palette" aria-label="components"></aside>
+
+  <!-- ── guided labs ──────────────────────────────────────────────────── -->
+  <aside class="bd-tutor" id="tutor" aria-label="lessons">
+    <h2 class="bd-panel__h">GUIDED_LABS</h2>
+    <div class="bd-tutor__body" id="tutor-body"></div>
+  </aside>
+
+  <!-- ── middle: the workspace ────────────────────────────────────────── -->
+  <section class="bd-stagewrap">
+    <div class="bd-stage" id="stage">
+      <svg class="bd-wires" id="wires" aria-hidden="true"></svg>
+      <div class="bd-nodes" id="nodes"></div>
+      <p class="bd-empty" id="empty-hint">
+        drag a device from the left onto this grid<br>
+        <span>then press <b>C</b> and click two devices to wire them</span>
+      </p>
+    </div>
+    <div class="bd-pdubar">
+      <div class="bd-pdubar__col">
+        <h2 class="bd-panel__h">PACKETS_FIRED</h2>
+        <div class="bd-pdulist" id="pdu-list"></div>
+      </div>
+      <div class="bd-pdubar__col bd-pdubar__col--grow">
+        <h2 class="bd-panel__h">PACKET_TRACE</h2>
+        <div class="bd-trace" id="trace">
+          <p class="bd-dim">no packet sent yet</p>
+        </div>
+      </div>
+    </div>
+    <div class="bd-status" id="status">ready</div>
+  </section>
+
+  <!-- ── right: properties + console ──────────────────────────────────── -->
+  <aside class="bd-side">
+    <div class="bd-panel" id="props">
+      <h2 class="bd-panel__h">PROPERTIES</h2>
+      <div class="bd-panel__body" id="props-body">
+        <p class="bd-dim">nothing selected</p>
+      </div>
+    </div>
+
+    <div class="bd-panel bd-panel--grow">
+      <h2 class="bd-panel__h">
+        CONSOLE
+        <span class="bd-dim" id="console-who">— no device</span>
+      </h2>
+      <div class="bd-out" id="console-out"></div>
+      <div class="bd-in">
+        <span class="bd-prompt">&gt;</span>
+        <input id="console-in" autocomplete="off" spellcheck="false"
+               placeholder="ping 8.8.8.8   ·   dig github.com   ·   help" disabled>
+      </div>
+    </div>
+  </aside>
+
+</main>
+
+<script type="module" src="/js/builder/main.js"></script>
+</body>
+</html>

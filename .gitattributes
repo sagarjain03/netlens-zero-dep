@@ -1,0 +1,12 @@
+# Force LF everywhere. The reproducible-build bonus requires byte-identical
+# output across machines; CRLF on Windows would change every file hash.
+* text=auto eol=lf
+
+# EXCEPT the HTTP fixtures. HTTP/1.1 framing IS carriage-return-line-feed: the
+# blank line that ends the headers is \r\n\r\n, and a chunk length is followed
+# by \r\n. Normalising these to LF silently breaks every HTTP test on a fresh
+# clone while the working tree that committed them keeps passing.
+test/fixtures/http-*.txt -text
+
+*.png binary
+*.der binary

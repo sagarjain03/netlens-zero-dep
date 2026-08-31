@@ -1,0 +1,53 @@
+/* reset.css — the ~40 lines of normalize we actually need. */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+/*
+ * The app is a fixed 100vh grid; every pane scrolls inside itself, so the page
+ * itself never should.
+ */
+body { overflow: hidden; }
+
+/*
+ * `hidden` sets display:none at the lowest specificity, so any class that sets
+ * display — .viz__empty is display:flex — silently wins and the element stays
+ * on screen. Every toggle in this app uses the hidden attribute, so it has to
+ * actually win.
+ */
+[hidden] { display: none !important; }
+
+body, h1, h2, h3, h4, p, figure, blockquote, dl, dd, ol, ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul[class], ol[class] { list-style: none; }
+
+img, picture, svg, video, canvas { max-width: 100%; display: block; }
+
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+
+button { cursor: pointer; }
+
+a { color: inherit; text-decoration: none; }
+
+code, pre, kbd, samp { font-family: var(--font-mono); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

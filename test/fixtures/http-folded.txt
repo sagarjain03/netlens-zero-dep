@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Content-Type: text/plain
+X-Long: first part
+  second part folded on
+	third part
+Content-Length: 2
+
+hi

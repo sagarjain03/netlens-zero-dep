@@ -1,0 +1,731 @@
+/* ── the bit lab ───────────────────────────────────────────────────────
+ *
+ * Takes over the stage, because there is no packet to animate here — these
+ * chapters are operated, not watched. Scrolls inside itself; the lesson card
+ * floats above it at a higher z-index, as it does over the canvas.
+ */
+
+.lab {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.lab__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 7px var(--sp-4);
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-1);
+  flex: none;
+}
+.lab__tag {
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  color: var(--accent);
+  border: 1px solid var(--line);
+  padding: 1px 5px;
+}
+.lab__title { font-size: 12px; color: var(--fg); flex: 1; }
+.lab__sim {
+  font-size: 8.5px;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--warn);
+  color: var(--warn);
+  padding: 0 4px;
+}
+/* Addressing is arithmetic, not a model — it gets a different badge. */
+.lab__real {
+  font-size: 8.5px;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--ok);
+  color: var(--ok);
+  padding: 0 4px;
+}
+
+.lab__body {
+  padding: var(--sp-4);
+  overflow-y: auto;
+  font-size: 12px;
+  line-height: 1.55;
+  max-width: 920px;
+}
+.lab__blurb { color: var(--fg-1); margin-bottom: var(--sp-4); }
+.lab__hint { color: var(--fg-2); margin-bottom: var(--sp-3); }
+
+.lab__section { margin-bottom: var(--sp-5); }
+.lab__sectionHead {
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--fg-2);
+  padding-bottom: var(--sp-2);
+  margin-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--line-soft);
+}
+.lab__meta { font-size: 10.5px; color: var(--fg-2); margin-top: var(--sp-2); }
+
+/* ── inputs ────────────────────────────────────────────────────────────── */
+.lab__inputs { display: flex; flex-wrap: wrap; gap: var(--sp-4); margin-bottom: var(--sp-4); }
+.lab__field { display: flex; flex-direction: column; gap: 3px; }
+.lab__fieldLabel {
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.lab__input {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  color: var(--accent);
+  padding: 5px 8px;
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  min-width: 220px;
+}
+.lab__input:focus { outline: none; border-color: var(--accent); }
+
+/* ── bit rows ──────────────────────────────────────────────────────────── */
+.lab__bits { display: flex; flex-wrap: wrap; gap: 2px; }
+.lab__bit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 20px;
+  padding: 2px 0;
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+  color: var(--fg-1);
+  font-size: 12px;
+  line-height: 1.2;
+}
+.lab__bit--live { cursor: pointer; transition: border-color var(--t-fast), color var(--t-fast); }
+.lab__bit--live:hover { border-color: var(--err); color: var(--err); }
+.lab__bit--broken { border-color: var(--err); color: var(--err); background: var(--bg-2); }
+.lab__bit--parity { border-color: var(--accent-dim); color: var(--accent); }
+.lab__bit--stuffed { border-color: var(--hl); color: var(--hl); }
+.lab__bitLabel { font-size: 7.5px; color: var(--fg-2); }
+
+.lab__legend { margin-top: var(--sp-2); font-size: 10.5px; color: var(--fg-2); }
+.lab__legendItem { display: block; }
+.lab__legendItem code { color: var(--accent); }
+
+/* ── CRC division ──────────────────────────────────────────────────────── */
+.lab__division {
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+  max-height: 200px;
+  overflow-y: auto;
+}
+.lab__divRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 2px var(--sp-2);
+  font-size: 11px;
+  color: var(--fg-2);
+  border-bottom: 1px solid var(--line-soft);
+}
+.lab__divRow:last-child { border-bottom: none; }
+.lab__divRow--now { background: var(--accent-soft); color: var(--fg); }
+.lab__divAt { color: var(--fg-2); flex: none; }
+.lab__divWhat { width: 30px; flex: none; font-size: 9px; letter-spacing: 0.08em; }
+.lab__divRow--now .lab__divWhat { color: var(--accent); }
+.lab__divBits { letter-spacing: 0.14em; overflow-x: auto; white-space: nowrap; }
+
+.lab__controls { display: flex; align-items: center; gap: var(--sp-2); margin-top: var(--sp-2); }
+.lab__btn {
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+  color: var(--fg-1);
+  padding: 3px 10px;
+  font-size: 11px;
+  transition: border-color var(--t-fast), color var(--t-fast);
+}
+.lab__btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── codeword split ────────────────────────────────────────────────────── */
+.lab__split { display: flex; flex-wrap: wrap; gap: var(--sp-4); }
+.lab__part { display: flex; flex-direction: column; gap: 2px; }
+.lab__partLabel {
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.lab__part code { letter-spacing: 0.14em; color: var(--fg); }
+.lab__fcs { color: var(--hl) !important; }
+
+/* ── framing ───────────────────────────────────────────────────────────── */
+.lab__frame { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; letter-spacing: 0.14em; }
+.lab__flag {
+  border: 1px solid var(--mag);
+  color: var(--mag);
+  padding: 2px 5px;
+}
+.lab__payload {
+  border: 1px solid var(--line);
+  color: var(--fg-1);
+  padding: 2px 5px;
+  word-break: break-all;
+}
+
+/* ── hamming syndrome ──────────────────────────────────────────────────── */
+.lab__syndrome {
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+  padding: var(--sp-2) var(--sp-3);
+  color: var(--fg-1);
+}
+
+/* ── parity grid ───────────────────────────────────────────────────────── */
+.lab__grid { display: inline-flex; flex-direction: column; gap: 2px; }
+.lab__gridRow { display: flex; gap: 2px; }
+.lab__cell {
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+  color: var(--fg-1);
+  font-size: 12px;
+}
+button.lab__cell { cursor: pointer; transition: border-color var(--t-fast), color var(--t-fast); }
+button.lab__cell:hover { border-color: var(--err); color: var(--err); }
+.lab__cell--parity { border-style: dashed; color: var(--accent); }
+.lab__cell--bad { border-color: var(--err); color: var(--err); }
+.lab__cell--suspect { border-color: var(--hl); color: var(--hl); }
+.lab__cell--corner { color: var(--fg-2); border-style: dashed; }
+
+/* ── verdict ───────────────────────────────────────────────────────────── */
+/* Pinned to the bottom of the scroll area: the verdict IS the lesson, and on
+   a short stage it was scrolling out of sight under the terminal. */
+.lab__verdict {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  border-left: 2px solid var(--line);
+  border-top: 1px solid var(--line);
+  background: var(--bg-1);
+  box-shadow: 0 -6px 14px -6px rgba(0, 0, 0, 0.45);
+  color: var(--fg);
+}
+.lab__verdict--ok   { border-left-color: var(--ok); }
+.lab__verdict--bad  { border-left-color: var(--err); }
+.lab__verdict--warn { border-left-color: var(--warn); }
+.lab__verdictMark { flex: none; }
+.lab__verdict--ok   .lab__verdictMark { color: var(--ok); }
+.lab__verdict--bad  .lab__verdictMark { color: var(--err); }
+.lab__verdict--warn .lab__verdictMark { color: var(--warn); }
+
+.lab__tally {
+  margin-top: var(--sp-3);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--fg-2);
+}
+
+
+/* ── the sliding-window ladder ─────────────────────────────────────────
+ *
+ * Time runs down, the two lanes are the machines, every diagonal is one
+ * transmission. A line that stops short with a cross was lost — the gap has
+ * to be visible, not asserted in a caption.
+ */
+
+.tl__controls { margin-bottom: var(--sp-4); }
+
+.tl__protocols { display: flex; flex-wrap: wrap; gap: 2px; margin-bottom: var(--sp-3); }
+.tl__proto {
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+  color: var(--fg-2);
+  padding: 4px 10px;
+  font-size: 11px;
+  transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast);
+}
+.tl__proto:hover { color: var(--fg); border-color: var(--fg-2); }
+.tl__proto--on {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.tl__sliders { display: flex; flex-wrap: wrap; gap: var(--sp-4); margin-bottom: var(--sp-3); }
+.tl__slider { display: flex; align-items: center; gap: var(--sp-2); }
+.tl__sliderLabel {
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.tl__slider input[type="range"] { width: 110px; accent-color: var(--accent); }
+.tl__sliderValue { color: var(--accent); font-size: 11px; min-width: 34px; }
+
+.tl__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); }
+.tl__check { display: flex; align-items: center; gap: 6px; color: var(--fg-1); font-size: 11px; }
+.tl__check input { accent-color: var(--accent); }
+
+.tl__ladderWrap {
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+  max-height: 280px;
+  overflow: auto;
+  padding: var(--sp-2) 0;
+}
+/* width drives, height follows the viewBox — setting both squeezes it. */
+.tl__ladder { width: 100%; height: auto; display: block; }
+
+.tl__lane {
+  fill: var(--fg-2);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.tl__axis { stroke: var(--line); stroke-width: 1; }
+
+.tl__line { stroke: var(--out); stroke-width: 1.4; }
+.tl__line--ack { stroke: var(--in); stroke-dasharray: 3 2; }
+.tl__line--lost { stroke: var(--err); }
+.tl__line--retx { stroke-width: 2.2; }
+
+.tl__seq { fill: var(--fg-2); font-size: 7.5px; }
+.tl__lost { fill: var(--err); font-size: 8px; }
+.tl__mark { font-size: 7.5px; letter-spacing: 0.04em; }
+.tl__mark--timeout { fill: var(--warn); }
+.tl__mark--discard { fill: var(--err); }
+
+/* ── the comparison strip ──────────────────────────────────────────────── */
+.tl__compare { margin-top: var(--sp-5); }
+
+.tl__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 4px 0;
+}
+.tl__barName {
+  width: 130px;
+  flex: none;
+  text-align: left;
+  color: var(--fg-2);
+  font-size: 11px;
+  transition: color var(--t-fast);
+}
+.tl__barName:hover { color: var(--accent); }
+.tl__bar--on .tl__barName { color: var(--accent); }
+
+.tl__barTrack {
+  flex: 1;
+  min-width: 60px;
+  height: 10px;
+  background: var(--bg-2);
+  border: 1px solid var(--line-soft);
+}
+.tl__barFill {
+  display: block;
+  height: 100%;
+  background: var(--fg-2);
+  transition: width var(--t-med);
+}
+.tl__bar--on .tl__barFill { background: var(--accent); }
+
+.tl__barValue { width: 78px; flex: none; font-size: 11px; color: var(--fg); }
+.tl__barTicks { width: 70px; flex: none; font-size: 10px; color: var(--fg-2); }
+
+@media (max-width: 700px) {
+  .tl__barName { width: 96px; }
+  .tl__barTicks { display: none; }
+}
+
+
+/* ── the addressing lab ────────────────────────────────────────────────
+ *
+ * The bit ruler is the whole idea made visible: 32 boxes, and one line
+ * through them that the prefix slider moves. Everything below it is a
+ * consequence of where that line sits.
+ */
+
+.addr__ruler { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+.addr__octet { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.addr__octetBits { display: flex; gap: 2px; }
+.addr__octetValue {
+  font-size: 10px;
+  color: var(--fg-2);
+  letter-spacing: 0.06em;
+}
+
+.addr__bit { min-width: 17px; transition: border-color var(--t-fast), color var(--t-fast); }
+.addr__bit--net  { border-color: var(--accent-dim); color: var(--accent); }
+.addr__bit--host { border-color: var(--line); color: var(--fg-2); }
+/* the last network bit — the line itself */
+.addr__bit--edge { border-right: 2px solid var(--hl); }
+
+.addr__legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); margin-top: var(--sp-3); }
+.addr__key {
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border: 1px solid;
+}
+.addr__key--net  { border-color: var(--accent-dim); color: var(--accent); }
+.addr__key--host { border-color: var(--line); color: var(--fg-2); }
+
+/* ── results ───────────────────────────────────────────────────────────── */
+.addr__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1px;
+  background: var(--line-soft);
+  border: 1px solid var(--line);
+}
+.addr__row {
+  background: var(--bg-1);
+  padding: 6px var(--sp-3);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+.addr__rowLabel {
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.addr__rowValue { color: var(--fg); font-size: 12px; }
+.addr__rowValue--net  { color: var(--accent); }
+.addr__rowValue--host { color: var(--in); }
+
+/* ── badges ────────────────────────────────────────────────────────────── */
+.addr__badges { display: flex; flex-direction: column; gap: var(--sp-2); }
+.addr__badge {
+  border-left: 2px solid var(--line);
+  background: var(--bg-1);
+  padding: var(--sp-2) var(--sp-3);
+  color: var(--fg-1);
+}
+.addr__badge b { color: var(--fg); }
+.addr__badge--ok   { border-left-color: var(--ok); }
+.addr__badge--ok b { color: var(--ok); }
+.addr__badge--warn { border-left-color: var(--warn); }
+.addr__badge--warn b { color: var(--warn); }
+
+/* ── the split ─────────────────────────────────────────────────────────── */
+.addr__subnets {
+  margin-top: var(--sp-3);
+  border: 1px solid var(--line);
+  max-height: 210px;
+  overflow-y: auto;
+}
+.addr__subnet {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  padding: 4px var(--sp-3);
+  border-bottom: 1px solid var(--line-soft);
+}
+.addr__subnet:last-child { border-bottom: none; }
+.addr__subnetNum { color: var(--fg-2); font-size: 10px; flex: none; }
+.addr__subnet code { color: var(--accent); }
+.addr__subnet .lab__meta { margin: 0; margin-left: auto; }
+
+/* ── the header field map ──────────────────────────────────────────────── */
+.addr__fields { border: 1px solid var(--line); }
+.addr__field {
+  display: grid;
+  grid-template-columns: 54px 118px 130px 1fr;
+  gap: var(--sp-3);
+  align-items: baseline;
+  padding: 4px var(--sp-3);
+  border-bottom: 1px solid var(--line-soft);
+}
+.addr__field:last-child { border-bottom: none; }
+.addr__fieldAt { color: var(--fg-2); font-size: 10px; }
+.addr__fieldName { color: var(--fg); }
+.addr__fieldValue { color: var(--accent); }
+.addr__fieldNote { color: var(--fg-2); }
+
+@media (max-width: 760px) {
+  .addr__field { grid-template-columns: 46px 1fr; }
+  .addr__fieldNote { grid-column: 1 / -1; }
+}
+
+/* ── the twenty bytes ──────────────────────────────────────────────────── */
+.addr__hex { display: flex; flex-wrap: wrap; gap: 3px; }
+.addr__byte {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 26px;
+  padding: 2px 0;
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+  color: var(--fg-1);
+  font-size: 12px;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color var(--t-fast), color var(--t-fast);
+}
+.addr__byte:hover { border-color: var(--err); color: var(--err); }
+.addr__byte--sum { border-color: var(--hl); color: var(--hl); }
+.addr__byte--broken { border-color: var(--err); color: var(--err); background: var(--bg-2); }
+.addr__byteAt { font-size: 7.5px; color: var(--fg-2); }
+
+select.lab__input { cursor: pointer; }
+
+
+/* ── the topology lab ──────────────────────────────────────────────────
+ *
+ * Diagram on the left, consequences on the right. Both cables and machines
+ * are clickable, so both need a hover state that says so.
+ */
+
+.topo__split {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(240px, 1fr);
+  gap: var(--sp-4);
+  align-items: start;
+}
+@media (max-width: 720px) {
+  .topo__split { grid-template-columns: 1fr; }
+}
+
+.topo__stage {
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+}
+.topo__svg { width: 100%; height: auto; display: block; }
+
+/* ── cables ────────────────────────────────────────────────────────────── */
+.topo__cable {
+  stroke: var(--line);
+  stroke-width: 2;
+  cursor: pointer;
+  transition: stroke var(--t-fast), stroke-width var(--t-fast);
+}
+.topo__cable:hover { stroke: var(--err); stroke-width: 3; }
+.topo__cable--live { stroke: var(--in); stroke-width: 2.4; }
+.topo__cable--cut {
+  stroke: var(--err);
+  stroke-width: 1.4;
+  stroke-dasharray: 3 4;
+  opacity: 0.55;
+}
+.topo__cut { fill: var(--err); font-size: 12px; pointer-events: none; }
+
+/* ── machines ──────────────────────────────────────────────────────────── */
+.topo__node { cursor: pointer; }
+.topo__dot {
+  fill: var(--bg-2);
+  stroke: var(--fg-2);
+  stroke-width: 1.5;
+  transition: stroke var(--t-fast), fill var(--t-fast);
+}
+.topo__node:hover .topo__dot { stroke: var(--accent); }
+.topo__label { fill: var(--fg-1); font-size: 11px; pointer-events: none; }
+.topo__hops { fill: var(--fg-2); font-size: 8px; pointer-events: none; }
+
+.topo__node--hub .topo__dot { stroke: var(--mag); }
+.topo__node--sender .topo__dot { stroke: var(--accent); fill: var(--accent-soft); stroke-width: 2.5; }
+.topo__node--sender .topo__label { fill: var(--accent); }
+.topo__node--heard .topo__dot { stroke: var(--in); }
+.topo__node--heard .topo__label { fill: var(--in); }
+.topo__node--deaf .topo__dot { stroke: var(--err); opacity: 0.5; }
+.topo__node--deaf .topo__label { fill: var(--err); opacity: 0.6; }
+
+/* ── the facts beside it ───────────────────────────────────────────────── */
+.topo__facts { display: flex; flex-direction: column; gap: 1px; }
+.topo__facts .addr__row { border: 1px solid var(--line); margin-bottom: -1px; }
+.topo__value--ok  { color: var(--ok) !important; }
+.topo__value--bad { color: var(--err) !important; }
+
+.topo__trait { margin-top: var(--sp-4); }
+.topo__trait h4 {
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--fg-2);
+  margin: var(--sp-3) 0 2px;
+  font-weight: 400;
+}
+.topo__trait h4:first-child { margin-top: 0; }
+.topo__trait p { color: var(--fg-1); margin: 0; }
+
+
+/* ── the comparison lab ────────────────────────────────────────────────── */
+.cmp__table { border: 1px solid var(--line); }
+.cmp__row {
+  display: grid;
+  gap: var(--sp-3);
+  align-items: baseline;
+  padding: 6px var(--sp-3);
+  border-bottom: 1px solid var(--line-soft);
+}
+.cmp__row:last-child { border-bottom: none; }
+.cmp__row--head {
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--line);
+}
+.cmp__col {
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.cmp__aspect {
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.cmp__value { color: var(--fg); }
+/* Where the two agree, the row steps back — the differences should carry. */
+.cmp__row--same .cmp__value { color: var(--fg-2); }
+/* The marker wraps to its own grid row, so it is pulled tight against the
+   values above it rather than reading as a second, half-empty row. */
+.cmp__same {
+  grid-column: 2 / -1;
+  margin-top: -4px;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: var(--ok);
+}
+
+.cmp__see {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  align-items: flex-start;
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.cmp__see:last-child { border-bottom: none; }
+.cmp__seeSay { color: var(--fg-1); }
+
+.cmp__ask { border-bottom: 1px solid var(--line-soft); }
+.cmp__ask:last-child { border-bottom: none; }
+.cmp__askQ {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  width: 100%;
+  text-align: left;
+  padding: 7px 0;
+  color: var(--fg);
+  font-size: 12px;
+  transition: color var(--t-fast);
+}
+.cmp__askQ:hover { color: var(--accent); }
+.cmp__askMark { color: var(--accent); width: 10px; flex: none; }
+.cmp__ask--open .cmp__askQ { color: var(--accent); }
+.cmp__askA {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0 0 var(--sp-3) var(--sp-4);
+  border-left: 2px solid var(--ok);
+  margin-left: 3px;
+  animation: lsn-in var(--t-med) both;
+}
+.cmp__askA b { color: var(--ok); }
+.cmp__askA span { color: var(--fg-1); }
+
+/* ── the encapsulation lab ─────────────────────────────────────────────── */
+.stk__nest { margin: var(--sp-3) 0 var(--sp-5); }
+.stk__layer {
+  border: 1px solid var(--line);
+  padding: var(--sp-2);
+  background: var(--bg-1);
+}
+.stk__layer--eth { border-color: var(--fg-2); }
+.stk__layer--ip { border-color: var(--out); }
+.stk__layer--tcp { border-color: var(--warn); }
+.stk__layer--tls { border-color: var(--mag); }
+
+.stk__bar { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-2); }
+.stk__name { color: var(--fg); }
+.stk__osi {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--fg-2);
+  border: 1px solid var(--line);
+  padding: 0 4px;
+}
+.stk__added { color: var(--hl); font-size: 11px; }
+.stk__size { margin-left: auto; color: var(--fg-2); font-size: 11px; }
+.stk__chapter {
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--fg-2);
+  border: 1px solid var(--line);
+  padding: 0 5px;
+  transition: color var(--t-fast), border-color var(--t-fast);
+}
+.stk__chapter:hover { color: var(--accent); border-color: var(--accent); }
+.stk__role { color: var(--fg-2); font-size: 11px; margin: 3px 0 var(--sp-2); }
+
+.stk__payload {
+  border: 1px dashed var(--ok);
+  background: var(--bg-2);
+  padding: var(--sp-3) var(--sp-2);
+  display: flex;
+  gap: var(--sp-2);
+}
+.stk__payload .stk__name { color: var(--ok); }
+
+.stk__meter {
+  position: relative;
+  height: 18px;
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+  margin-bottom: var(--sp-3);
+}
+.stk__meterFill {
+  display: block;
+  height: 100%;
+  background: var(--accent-soft);
+  border-right: 1px solid var(--accent);
+  transition: width var(--t-med);
+}
+.stk__meterLabel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--fg-1);
+}
+
+.stk__models { border: 1px solid var(--line); }
+.stk__model {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  padding: 4px var(--sp-3);
+  border-bottom: 1px solid var(--line-soft);
+}
+.stk__model:last-child { border-bottom: none; }
+.stk__modelN { color: var(--fg-2); font-size: 10px; width: 22px; flex: none; }
+.stk__modelOsi { color: var(--fg); width: 110px; flex: none; }
+.stk__modelArrow { color: var(--fg-2); }
+.stk__modelTcp { color: var(--accent); }
+.stk__model--ghost { opacity: 0.55; }
+.stk__model--ghost .stk__modelTcp { color: var(--fg-2); }
+.stk__modelNote { margin-left: auto; color: var(--warn); font-size: 10px; }
+
+@media (max-width: 640px) {
+  .stk__modelOsi { width: auto; }
+  .stk__modelNote { display: none; }
+}

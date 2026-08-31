@@ -1,0 +1,21 @@
+{
+  "name": "netlens",
+  "version": "1.0.0",
+  "description": "Learn computer networking with real packets you can open, edit, break and re-send. Zero dependencies.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "start": "node run.js",
+    "dev": "node run.js --watch",
+    "build": "node build.js",
+    "test": "node verify-zero-dep.js && node --test",
+    "verify": "node verify-zero-dep.js",
+    "preflight": "node tools/preflight/network-check.js",
+    "build:check": "node build.js --check"
+  }
+}

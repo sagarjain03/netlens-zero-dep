@@ -1,0 +1,139 @@
+/*
+ * theme.css — design tokens. Replaces tailwind / bootstrap.
+ *
+ * The look is a terminal, deliberately and all the way down: monospace for
+ * every word including headings, square corners, hairline rules instead of
+ * shadows, and labels in SCREAMING_SNAKE_CASE. A tool about reading bytes
+ * should look like a tool that reads bytes — and it means the canvas, the hex
+ * grid and the actual terminal all belong to the same surface rather than
+ * sitting awkwardly inside a web page.
+ *
+ * Fonts are system stacks on purpose: a Google Fonts <link> would be a runtime
+ * dependency and verify-zero-dep.js rejects it.
+ */
+:root {
+  /* One family throughout. There is no second font. */
+  --font-mono: ui-monospace, "Cascadia Mono", "JetBrains Mono", "SF Mono", Menlo,
+               Consolas, "DejaVu Sans Mono", monospace;
+  --font-ui: var(--font-mono);
+
+  /* Square. A rounded corner would undo the whole thing. */
+  --r-sm: 0;
+  --r-md: 0;
+  --r-lg: 0;
+
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+
+  --t-fast: 90ms linear;
+  --t-med: 180ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Uppercase label treatment, used in a dozen places. */
+  --label-size: 10px;
+  --label-track: 0.14em;
+}
+
+/* ── dark (default) ──────────────────────────────────────────────────── */
+:root, [data-theme="dark"] {
+  --bg:        #080808;
+  --bg-1:      #0d0d0d;
+  --bg-2:      #121212;
+  --bg-3:      #1a1a1a;
+  --line:      #262626;
+  --line-soft: #1a1a1a;
+
+  --fg:        #e8e8e8;
+  --fg-1:      #9a9a9a;
+  --fg-2:      #5c5c5c;
+
+  --accent:      #22d3ee;
+  --accent-dim:  #0e7490;
+  --accent-soft: rgba(34, 211, 238, 0.10);
+
+  --out:  #22d3ee;   /* packets leaving  */
+  --in:   #4ade80;   /* packets arriving */
+  --ok:   #4ade80;
+  --warn: #facc15;
+  --err:  #f87171;
+  --hl:   #facc15;   /* selected byte span */
+  --mag:  #c084fc;
+
+  --tier-1: #4ade80;
+  --tier-2: #facc15;
+  --tier-3: #f87171;
+
+  --shadow: none;
+  --grid-line: rgba(255, 255, 255, 0.022);
+}
+
+/* ── light ───────────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  --bg:        #fbfbfa;
+  --bg-1:      #ffffff;
+  --bg-2:      #f4f4f2;
+  --bg-3:      #e9e9e6;
+  --line:      #d6d6d2;
+  --line-soft: #e9e9e6;
+
+  --fg:        #16181a;
+  --fg-1:      #4a4d50;
+  --fg-2:      #83878b;
+
+  --accent:      #0e7490;
+  --accent-dim:  #155e75;
+  --accent-soft: rgba(14, 116, 144, 0.09);
+
+  --out:  #0e7490;
+  --in:   #15803d;
+  --ok:   #15803d;
+  --warn: #a16207;
+  --err:  #b91c1c;
+  --hl:   #eab308;
+  --mag:  #7e22ce;
+
+  --tier-1: #15803d;
+  --tier-2: #a16207;
+  --tier-3: #b91c1c;
+
+  --shadow: none;
+  --grid-line: rgba(0, 0, 0, 0.03);
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-variant-ligatures: none;   /* -> and => must stay two characters */
+}
+
+/* ── shared label treatment ──────────────────────────────────────────── */
+.label {
+  font-size: var(--label-size);
+  text-transform: uppercase;
+  letter-spacing: var(--label-track);
+  color: var(--fg-2);
+}
+
+/* ── bracketed status tag: [ OK ] [WARN] [ ERR ] ─────────────────────── */
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid currentColor;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.tag--ok   { color: var(--ok); }
+.tag--warn { color: var(--warn); }
+.tag--err  { color: var(--err); }
+.tag--info { color: var(--accent); }
+.tag--dim  { color: var(--fg-2); }
