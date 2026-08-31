@@ -61,7 +61,7 @@ send it again. The internet answers differently.
 ## Quick start
 
 ```bash
-git clone <this repo> && cd netlens
+git clone https://github.com/sagarjain03/netlens-zero-dep && cd netlens
 node run.js
 ```
 
