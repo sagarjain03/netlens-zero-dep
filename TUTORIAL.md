@@ -1,31 +1,30 @@
 # 📘 netlens — Tutorial
 
-**Ye doc tumhare liye hai.** Isme koi assumption nahi hai. Har cheez step by step,
-Hinglish me, aur har command ka output bhi diya hai taaki pata chale ki sahi chal raha hai.
+**This document is for you.** It makes no assumptions. Everything is explained step by step, in simple English, and the expected output of every command is included so you can tell whether everything is working correctly.
 
 ---
 
-## Part 1 · Sabse pehle: ise chalao kaise
+## Part 1 · First: How to run it
 
-### Step 1 — Terminal kholo
+### Step 1 — Open the terminal
 
-VS Code me `` Ctrl+` `` dabao, ya Windows me `cmd` / PowerShell kholo.
+Press ``Ctrl+` `` in VS Code, or open `cmd` / PowerShell on Windows.
 
-### Step 2 — Project folder me jao
+### Step 2 — Go to the project folder
 
 ```bash
 cd C:\Users\HP\OneDrive\Desktop\zero-dep
 ```
 
-### Step 3 — Chalao
+### Step 3 — Run it
 
 ```bash
 node run.js
 ```
 
-**Ye dikhna chahiye:**
+**You should see:**
 
-```
+```text
   ▄▄▄   netlens  v1.0.0
   ▀▀▀   see every byte
 
@@ -37,24 +36,27 @@ node run.js
   ctrl+c to stop
 ```
 
-Browser apne aap khul jaayega. Nahi khula to khud `http://127.0.0.1:7777` type karo.
+The browser should open automatically. If it does not, manually enter `http://127.0.0.1:7777`.
 
-**Band karne ke liye:** us terminal me `Ctrl+C`.
+**To stop it:** Press `Ctrl+C` in that terminal.
 
-> 🔴 **"port 7777 busy" aaye to?** Koi purana server chal raha hai. Ye chalao:
+> 🔴 **What if you get "port 7777 busy"?** An old server is probably still running. Run:
+>
 > ```bash
 > node run.js --port 7900
 > ```
-> Ya sab band karo (PowerShell me):
+>
+> Or stop all Node processes (in PowerShell):
+>
 > ```powershell
 > Get-Process node | Stop-Process -Force
 > ```
 
 ---
 
-## Part 2 · Screen pe kya-kya hai
+## Part 2 · What is on the screen
 
-```
+```text
 ┌────────────────────────────────────────────────────────────────────────┐
 │ NETLENS_ v1.0.0//ZERO_DEP  ROOT / CH_02 / NAMES_TO_NUMBERS / DO_IT     │ <- 1
 │                                        [NET: OK] [DEPS: 0]   ▬▬▭▭▭  ◐ ?│
@@ -69,9 +71,9 @@ Browser apne aap khul jaayega. Nahi khula to khud `http://127.0.0.1:7777` type k
 │ 07 FULL_JOURNEY ├────────────────────────────────┤ HEX_DUMP      30 B  │ <- 6
 │ 08 IT_WAS_LAYER │ narration line here     <- 3  │ 0000 1a 2b 01 00 ..  │
 │                 ├────────────────────────────────┤ BYTE 27  0x1c       │
-│ DEPTH           │ PACKET_TIMELINE               │ 0 0 0 1 1 1 0 0      │
-│▐▪ STORY    read │  0.0ms DNS query →1.1.1.1 <-4 │──────────────────────│
-│ ▪ DO_IT     run │  9.4ms DNS resp  ←1.1.1.1     │ [edit bar]           │ <- 7
+│ DEPTH           │ PACKET_TIMELINE               │──────────────────────│
+│▐▪ STORY    read │  0.0ms DNS query →1.1.1.1 <-4 │ [edit bar]           │ <- 7
+│ ▪ DO_IT     run │  9.4ms DNS resp  ←1.1.1.1     │
 ├─────────────────┴────────────────────────────────┴─────────────────────┤
 │ $ dig facebook.com                                                     │ <- 8
 │   → 30 bytes to 1.1.1.1:53 (Cloudflare)                                │
@@ -80,126 +82,127 @@ Browser apne aap khul jaayega. Nahi khula to khud `http://127.0.0.1:7777` type k
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-| # | Kya hai | Kaam |
-|---|---|---|
-| 1 | **Header** | Kaunsa chapter khula hai, progress dots, theme toggle |
-| 2 | **Canvas** | Packet yahan animate hota hai |
-| 3 | **Narration** | Abhi kya hua, ek plain line me |
-| 4 | **Timeline** | Har packet ki ek row. Click karo → inspector me khulega |
-| 5 | **Packet tabs** | `Sent` / `Received` — kaunsa packet dekh rahe ho |
-| 6 | **Hex** | Asli bytes |
-| 7 | **Edit bar** | Byte badalne ke controls |
-| 8 | **Terminal** | Yahan commands type karte ho |
+| # | What it is      | What it does                                                     |
+| - | --------------- | ---------------------------------------------------------------- |
+| 1 | **Header**      | Shows which chapter is open, progress dots, and the theme toggle |
+| 2 | **Canvas**      | Packets are animated here                                        |
+| 3 | **Narration**   | Explains what just happened in one plain line                    |
+| 4 | **Timeline**    | One row for every packet. Click it → it opens in the inspector   |
+| 5 | **Packet tabs** | `Sent` / `Received` — which packet you are viewing               |
+| 6 | **Hex**         | The actual bytes                                                 |
+| 7 | **Edit bar**    | Controls for changing bytes                                      |
+| 8 | **Terminal**    | Where you type commands                                          |
 
-Upar wala breadcrumb hamesha batata hai tum kahan ho:
+The breadcrumb at the top always tells you where you are:
+
 `ROOT / CH_02 / NAMES_TO_NUMBERS / DO_IT`
 
 ---
 
-## Part 3 · Teen "Depth" levels (left sidebar me)
+## Part 3 · Three "Depth" levels (in the left sidebar)
 
-Ye project ka **sabse important design** hai. Sidebar me `DEPTH` ke neeche teen options hain:
+This is the **most important design feature of the project**. Under `DEPTH` in the sidebar, there are three options:
 
-| Level | Keyboard | Kya dikhta hai | Kiske liye |
-|---|---|---|---|
-| 🟢 **STORY** | `1` | Canvas + terminal | Beginner |
-| 🟡 **DO_IT** | `2` | Upar wala + timeline + narration | Beginner |
-| 🔴 **REAL_BYTES** | `3` | Upar wala + **inspector** (hex, bits, editor) | Student |
+| Level             | Keyboard | What you see                              | For whom |
+| ----------------- | -------- | ----------------------------------------- | -------- |
+| 🟢 **STORY**      | `1`      | Canvas + terminal                         | Beginner |
+| 🟡 **DO_IT**      | `2`      | Above + timeline + narration              | Beginner |
+| 🔴 **REAL_BYTES** | `3`      | Above + **inspector** (hex, bits, editor) | Student  |
 
-**Terminal har tier pe dikhta hai.** Wo poore app ka input device hai.
+**The terminal is visible at every tier.** It is the input device for the entire app.
 
-**Beginner kabhi tier 3 pe jaata hi nahi.** Usko hex byte dikhta hi nahi.
-**Tier 3 pe jaane ke liye keyboard pe `3` dabao** (ya sidebar me click karo).
+**A beginner never needs to go to tier 3.** They will never see the hex bytes.
 
-> ⚠️ **Zaroori:** Byte editor **sirf tier 3 pe** kaam karta hai. Agar kuch kaam
-> nahi kar raha, pehle check karo ki tum tier 3 pe ho.
+To go to tier 3, press **`3`** on the keyboard (or click it in the sidebar).
+
+> ⚠️ **Important:** The byte editor **only works on tier 3**. If something is not working, first check that you are on tier 3.
 
 ---
 
-## Part 4 · Saare commands
+## Part 4 · All commands
 
-Terminal me `help` type karo, ya ye list dekho:
+Type `help` in the terminal, or refer to this list:
 
-### Chapter 1 — Tumhara apna network
+### Chapter 1 — Your own network
 
-| Command | Kya karta hai |
-|---|---|
-| `ifconfig` | Tumhara IP, subnet, gateway, MAC, DNS |
-| `arp` | Tumhare network pe aur kaun-kaun se devices hain |
-| `route` | Tumhari routing table |
-| `netstat` | Abhi kitne connections khule hain |
-| `ping <host>` | Wo host reachable hai? Kitni door hai? |
+| Command       | What it does                                                |
+| ------------- | ----------------------------------------------------------- |
+| `ifconfig`    | Shows your IP, subnet, gateway, MAC, and DNS                |
+| `arp`         | Shows what other devices are on your network                |
+| `route`       | Shows your routing table                                    |
+| `netstat`     | Shows how many connections are currently open               |
+| `ping <host>` | Checks whether the host is reachable and how far away it is |
 
 ### Chapter 2 — DNS
 
-| Command | Kya karta hai |
-|---|---|
-| `dig <domain>` | Naam se IP nikalta hai — **asli packet bhejta hai** |
-| `dig <domain> AAAA` | IPv6 address maangta hai |
-| `dig @8.8.8.8 <domain>` | Google se poochta hai, Cloudflare se nahi |
-| `resolvers` | Teen resolvers ki speed compare karta hai |
+| Command                 | What it does                                             |
+| ----------------------- | -------------------------------------------------------- |
+| `dig <domain>`          | Gets an IP address from a name — **sends a real packet** |
+| `dig <domain> AAAA`     | Requests an IPv6 address                                 |
+| `dig @8.8.8.8 <domain>` | Asks Google instead of Cloudflare                        |
+| `resolvers`             | Compares the speed of three resolvers                    |
 
 ### Chapter 3 — Routing
 
-| Command | Kya karta hai |
-|---|---|
-| `tracert <host>` | Har router jo beech me aata hai — **live** |
-| `traceroute <host>` | Wahi cheez (Linux/Mac wala naam) |
+| Command             | What it does                             |
+| ------------------- | ---------------------------------------- |
+| `tracert <host>`    | Shows every router in between — **live** |
+| `traceroute <host>` | Same thing (Linux/Mac name)              |
 
 ### Chapter 5 — TLS / certificates
 
-| Command | Kya karta hai |
-|---|---|
-| `tls <host>` | Apna ClientHello bhejta hai, certificate khud parse karta hai |
-| `tls <host> --no-sni` | Bina naam ke — dekho server kaise mana kar deta hai |
-| `tls <host> --sni <naam>` | 🔥 Doosri site ka naam maango, uska certificate milega |
+| Command                   | What it does                                                |
+| ------------------------- | ----------------------------------------------------------- |
+| `tls <host>`              | Sends its own ClientHello and parses the certificate itself |
+| `tls <host> --no-sni`     | Sends no hostname — see how the server rejects it           |
+| `tls <host> --sni <name>` | 🔥 Request another site's name and receive its certificate  |
 
 ### Utility
 
-| Command | Kya karta hai |
-|---|---|
-| `doctor` | Check karta hai ki is machine pe kya-kya allowed hai |
-| `replay [speed]` | Last animation dobara. `replay 8` = 8x slow |
-| `lang hi` | Narration Hinglish me |
-| `clear` | Screen saaf |
-| `help <command>` | Kisi ek command ki detail |
+| Command          | What it does                                       |
+| ---------------- | -------------------------------------------------- |
+| `doctor`         | Checks what is allowed on this machine             |
+| `replay [speed]` | Replays the last animation. `replay 8` = 8x slower |
+| `lang hi`        | Switches narration to Hinglish                     |
+| `clear`          | Clears the screen                                  |
+| `help <command>` | Shows details about a specific command             |
 
 ### Terminal shortcuts
 
-| Key | Kaam |
-|---|---|
-| `↑` `↓` | Purane commands |
-| `Tab` | Auto-complete |
-| `Ctrl+L` | Clear |
-| `Ctrl+C` | Line cancel |
+| Key      | What it does            |
+| -------- | ----------------------- |
+| `↑` `↓`  | Previous commands       |
+| `Tab`    | Auto-complete           |
+| `Ctrl+L` | Clear                   |
+| `Ctrl+C` | Cancel the current line |
 
-### Terminal ka size badalna
+### Resizing the terminal
 
-Terminal ke **upar ek patli line** hai (grip handle). Uspe:
+There is a **thin line at the top of the terminal** (the grip handle). Use it like this:
 
-| Action | Kaam |
-|---|---|
-| **Drag** upar/neeche | Terminal chhota/bada |
-| **Double-click** | Default (248px) ↔ bada (55% screen) toggle |
-| Click karke `↑` `↓` | 16px step. `Shift` ke saath 64px |
+| Action                  | What it does                                              |
+| ----------------------- | --------------------------------------------------------- |
+| **Drag** up/down        | Makes the terminal smaller/larger                         |
+| **Double-click**        | Toggles between default (248px) ↔ large (55% of screen)   |
+| Click and press `↑` `↓` | Changes size in 16px steps. With `Shift`, changes by 64px |
 
-Size **yaad rakha jaata hai** — agli baar wahi milega.
+The size is **remembered** — you will get the same size next time.
 
-> 💡 `tracert` chalane se pehle terminal bada kar lo (double-click) — uska output
-> 12+ lines ka hota hai.
+> 💡 Before running `tracert`, make the terminal larger (double-click) — its output is usually 12+ lines long.
 
 ---
 
-## Part 5 · Pehla din: 10 minute me sab dekho
+## Part 5 · First day: See everything in 10 minutes
 
-Ye exactly type karo, isi order me.
+Type these commands **exactly in this order**.
 
-### 1️⃣ Apna network dekho (30 sec)
+### 1️⃣ See your network (30 sec)
 
-```
+```text
 ifconfig
 ```
-```
+
+```text
   Interface   Wi-Fi  (Realtek RTL8822CE 802.11ac PCIe Adapter)
   Your IP     192.168.1.35/24
   Subnet      255.255.255.0      who counts as your neighbour
@@ -207,203 +210,238 @@ ifconfig
   MAC         60:e9:aa:b9:ca:27  burned into the hardware
   DNS         103.127.130.13, 103.127.130.50
 ```
-**Ye tumhara asli laptop hai.** Koi fake data nahi.
 
-### 2️⃣ Ghar ke doosre devices (30 sec)
+**This is your actual laptop.** There is no fake data.
 
-```
+### 2️⃣ See the other devices at home (30 sec)
+
+```text
 arp
 ```
-```
+
+```text
   192.168.1.1     30:3d:51:a3:10:30   your router
   192.168.1.36    44:5c:e9:33:bd:e8   another device on this network
   2 device(s). 7 multicast/broadcast rows hidden — those are not devices.
 ```
-Wo doosra device? **Kisi ka phone hai jo tumhare Wi-Fi pe hai.**
-Canvas pe tumhari asli LAN ban gayi hogi.
 
-### 3️⃣ Pehla asli packet (30 sec)
+That other device? **It is someone's phone connected to your Wi-Fi.**
 
-```
+Your actual LAN should now appear on the canvas.
+
+### 3️⃣ Your first real packet (30 sec)
+
+```text
 dig facebook.com
 ```
-```
+
+```text
   → 30 bytes to 1.1.1.1:53 (Cloudflare)
   ← 46 bytes in 8.3 ms
   facebook.com.  44  IN  A  57.144.150.1
 ```
-Canvas dekho — ek dot ud ke gaya aur wapas aaya. **Wo 30 bytes asli me gaye the.**
 
-### 4️⃣ Slow motion me dekho (30 sec)
+Look at the canvas — a dot flies out and comes back.
 
-```
+**Those 30 bytes were actually sent.**
+
+### 4️⃣ Watch it in slow motion (30 sec)
+
+```text
 replay 8
 ```
-Ab dhyan se dekho: dot nikalta hai, pahunchta hai, jawab wapas aata hai.
 
-### 5️⃣ IPv6 maango (30 sec)
+Now watch carefully: the dot leaves, reaches its destination, and the response comes back.
 
-```
+### 5️⃣ Request IPv6 (30 sec)
+
+```text
 dig facebook.com AAAA
 ```
-```
+
+```text
   facebook.com.  25  IN  AAAA  2a03:2880:f34b:1:face:b00c:0:25de
                                                 ^^^^^^^^^
 ```
-👀 **`face:b00c`** dekha? Facebook ne apne IPv6 address me hex me "facebook" likha hai.
-Ye asli hai. Ye fake nahi ho sakta.
 
-### 6️⃣ Raasta dekho (1 min)
+👀 **See `face:b00c`?** Facebook has written "facebook" into its IPv6 address using hexadecimal.
 
-```
+This is real. It is not fake.
+
+### 6️⃣ See the route (1 min)
+
+```text
 tracert 1.1.1.1 8
 ```
-Hops ek-ek karke aayenge. Ek hop `* * *` dikhayega — wo router **jawab dene se
-mana kar raha hai**, par packet phir bhi aage bhej raha hai. Canvas pe wo
-**dashed box with `?`** ban jaayega.
 
-### 7️⃣ Machine check (30 sec)
+The hops will appear one by one. One hop will show `* * *` — that router **is refusing to respond**, but it is still forwarding the packet.
 
-```
+On the canvas, it will appear as a **dashed box with `?`**.
+
+### 7️⃣ Check the machine (30 sec)
+
+```text
 doctor
 ```
-```
+
+```text
   ok   DNS over UDP 53      10 ms via Cloudflare
   ok   Your interface       Wi-Fi 192.168.1.35/24
   ok   LAN neighbours       2 device(s)
   ok   Routing table        default via 192.168.1.1
   ok   ICMP ping            4 ms, TTL 59
 ```
-Sab `ok` = sab kaam kar raha hai.
+
+Everything showing `ok` = everything is working.
 
 ---
 
 ## Part 6 · 🔥 THE BIG ONE — Byte editor
 
-**Ye project ka sabse important feature hai.** Demo ka climax yahi hai.
-Dhyan se, step by step.
+**This is the most important feature of the project.** This is the climax of the demo.
+
+Follow it carefully, step by step.
 
 ### Setup
 
-**Step 1:** Terminal me:
-```
+**Step 1:** In the terminal:
+
+```text
 dig facebook.com
 ```
 
-**Step 2:** Keyboard pe **`3`** dabao (tier 3 pe jao).
-Right side me inspector khul jaayega.
+**Step 2:** Press **`3`** on the keyboard (go to tier 3).
 
-> Agar inspector nahi khula — sidebar me `Real bytes` pe click karo.
+The inspector will open on the right side.
 
-**Step 3:** Inspector me upar `→ Sent 30 B ✎` tab pe click karo.
-(✎ ka matlab: **ye packet edit ho sakta hai**)
+> If the inspector does not open — click **Real bytes** in the sidebar.
+
+**Step 3:** In the inspector, click the `→ Sent 30 B ✎` tab at the top.
+
+(`✎` means: **this packet can be edited**)
 
 ---
 
 ### Edit 1 · IPv4 → IPv6
 
-**Step 4:** Field tree me `Header` ke `▾` pe click karke usko **band** karo.
-Ab `Question` section dikhega.
+**Step 4:** In the field tree, click `▾` next to `Header` to **collapse it**.
 
-**Step 5:** `QTYPE   1 (A)` pe click karo.
+Now you should see the `Question` section.
 
-Ab teen cheezein ek saath honi chahiye:
-- Hex me do bytes **highlight** ho gaye (`00 01`)
-- Neeche **explanation box** aa gaya: *"Which kind of record you want. 1 = A (IPv4), 28 = AAAA (IPv6)..."*
-- Neeche **edit bar** me `byte 26` dikh raha hai
+**Step 5:** Click:
 
-**Step 6:** Ab **keyboard se type karo** (koi box nahi hai, seedha type karo):
+`QTYPE   1 (A)`
 
+Three things should happen at the same time:
+
+* Two bytes in the hex view should be **highlighted** (`00 01`)
+* An **explanation box** should appear below: *"Which kind of record you want. 1 = A (IPv4), 28 = AAAA (IPv6)..."*
+* The **edit bar** below should show `byte 26`
+
+**Step 6:** Now type using the **keyboard** (there is no input box; type directly):
+
+```text
+0  0        ← change the first byte to 00
+→           ← ArrowRight (move to the next byte)
+1  c        ← change the second byte to 1c
 ```
-0  0        ← pehla byte 00 kar diya
-→           ← ArrowRight (agle byte pe jao)
-1  c        ← doosra byte 1c kar diya
-```
 
-**Kya hona chahiye:**
-- Tree me `QTYPE` **turant** `28 (AAAA)` ban gaya — **abhi kuch bheja nahi**
-- Hex me `1c` byte **laal** ho gaya
-- Edit bar me `1 byte changed` + `Re-send for real` button
+**What should happen:**
 
-**Step 7:** Ab **`r`** dabao (ya `Re-send for real` button click karo).
+* The tree should immediately show `QTYPE` as **`28 (AAAA)`** — nothing has been sent yet
+* The `1c` byte should turn **red** in the hex view
+* The edit bar should show `1 byte changed` + a `Re-send for real` button
 
-**Terminal me:**
-```
+**Step 7:** Now press **`r`** (or click the `Re-send for real` button).
+
+**In the terminal:**
+
+```text
 re-sending 30 edited bytes
   facebook.com.  25  IN  AAAA  2a03:2880:f34b:1:face:b00c:0:25de
 ```
 
-🎉 **Tumne ek byte badla. Internet ne alag jawab diya.**
+🎉 **You changed one byte. The internet gave you a different answer.**
 
 ---
 
-### Edit 2 · Transaction ID todo
+### Edit 2 · Change the Transaction ID
 
-**Step 1:** Fresh start:
-```
+**Step 1:** Start fresh:
+
+```text
 dig facebook.com
 ```
 
-**Step 2:** Tier 3 pe raho, `Sent` tab pe raho.
+**Step 2:** Stay on tier 3 and stay on the `Sent` tab.
 
-**Step 3:** Tree me `Header` → `ID` pe click karo.
+**Step 3:** In the tree, click:
 
-**Step 4:** Type karo:
-```
+`Header` → `ID`
+
+**Step 4:** Type:
+
+```text
 7  f
 →
 3  e
 ```
 
-**Step 5:** `r` dabao.
+**Step 5:** Press `r`.
 
-**Terminal me:**
-```
+**In the terminal:**
+
+```text
 re-sending 30 edited bytes
 reply REJECTED — waiting for 0x8b62, got 0x7f3e
 ```
 
-**Timeline me:** `DNS response · REJECTED`
+**In the timeline:** `DNS response · REJECTED`
 
-**Narration me:** *"A reply arrived and was thrown away... That mismatch is
-exactly how a forged DNS reply gets rejected."*
+**In the narration:**
 
-**Ye kya sikhaya?** Har DNS query me ek random ID hoti hai. Reply ki ID match
-nahi kari to reject. **Isliye koi attacker fake DNS answer nahi bhej sakta** —
-usse wo random number guess karna padega.
+*"A reply arrived and was thrown away... That mismatch is exactly how a forged DNS reply gets rejected."*
 
----
+**What did this teach?**
 
-### Byte editor ke saare keys
+Every DNS query has a random ID. If the response ID does not match, the response is rejected.
 
-⚠️ Ye sirf **tier 3** pe kaam karte hain, aur **Sent packet** select hona chahiye.
-
-| Key | Kaam |
-|---|---|
-| `0-9` `a-f` | Do digit type karo = byte badal gaya |
-| `←` `→` | Agla/pichla byte |
-| `r` | **Re-send** — asli me bhejo |
-| `u` | **Undo** — sab wapas |
-| `Esc` | Edit cancel |
-
-**Aur kya try kar sakte ho:**
-
-| Field | Isse badlo | Kya hoga |
-|---|---|---|
-| `QTYPE` | `00 0f` | MX records — mail servers |
-| `QTYPE` | `00 02` | NS records — kaun is domain ka maalik hai |
-| `QTYPE` | `00 10` | TXT records |
-| `QNAME` ka koi length byte | kuch bhi galat | Parse fail — hum batayenge kahan ruka |
+**This is why an attacker cannot simply send a fake DNS answer** — they would have to guess that random number.
 
 ---
 
-## Part 7 · Bit ruler (chauthi zoom level)
+### All byte editor keys
 
-Tier 3 pe, tree me `Header` → **`RD`** pe click karo.
+⚠️ These only work on **tier 3**, and the **Sent packet** must be selected.
 
-Hex ke neeche ye dikhega:
+| Key         | What it does                       |
+| ----------- | ---------------------------------- |
+| `0-9` `a-f` | Type two digits = the byte changes |
+| `←` `→`     | Move to the previous/next byte     |
+| `r`         | **Re-send** — send it for real     |
+| `u`         | **Undo** — revert everything       |
+| `Esc`       | Cancel the edit                    |
 
-```
+**Other things you can try:**
+
+| Field                      | Change it to       | What happens                                      |
+| -------------------------- | ------------------ | ------------------------------------------------- |
+| `QTYPE`                    | `00 0f`            | MX records — mail servers                         |
+| `QTYPE`                    | `00 02`            | NS records — who owns this domain                 |
+| `QTYPE`                    | `00 10`            | TXT records                                       |
+| Any length byte in `QNAME` | Anything incorrect | Parse failure — we will show you where it stopped |
+
+---
+
+## Part 7 · Bit ruler (fourth zoom level)
+
+On tier 3, in the tree, click:
+
+`Header` → **`RD`**
+
+Below the hex view, you will see:
+
+```text
 byte 2   0x01   1
 
   0  0  0  0  0  0  0  1
@@ -416,38 +454,51 @@ byte 2   0x01   1
   bit 7     RD       1
 ```
 
-**Ye samajhne wali cheez hai:** ye **ek byte** (`0x01`) me **paanch alag fields**
-hain. Har bit ka apna matlab hai. Isiliye "0x01" dikhana kuch nahi sikhata, par
-aath labelled bits dikhana sab kuch sikha deta hai.
+**This is the important concept:** one **byte** (`0x01`) contains **five different fields**.
+
+Every bit has its own meaning.
+
+This is why simply showing `0x01` does not teach much, while showing eight labelled bits teaches everything.
 
 ---
 
-## Part 8 · Doosre useful commands
+## Part 8 · Other useful commands
 
-### Teen DNS servers ki race
-```
+### Race between three DNS servers
+
+```text
 resolvers github.com
 ```
-```
+
+```text
   Cloudflare  1.1.1.1     8.9 ms   20.207.73.82
   Google      8.8.8.8    11.7 ms   20.207.73.82
   Quad9       9.9.9.9     8.9 ms   20.207.73.82
   Same answer, different speeds. The distance to the resolver is real.
 ```
 
-### TTL se distance nikalo
-```
+### Calculate distance using TTL
+
+```text
 ping 1.1.1.1
 ```
-```
+
+```text
   32 bytes from 1.1.1.1  time=4ms  TTL=59
   TTL 59 means about 5 routers between you and 1.1.1.1.
 ```
-**Kaise?** Sender TTL 64 se shuru karta hai, har router 1 ghatata hai.
-`64 − 59 = 5 hops`. Traceroute chalaye bina distance pata chal gayi.
 
-### Narration Hinglish me
-```
+**How?**
+
+The sender starts with TTL 64, and every router decreases it by 1.
+
+`64 − 59 = 5 hops`
+
+So you can determine the approximate distance without running traceroute.
+
+### Narration in Hinglish
+
+```text
 lang hi
 dig facebook.com
 ```
@@ -456,25 +507,27 @@ dig facebook.com
 
 ## Part 9 · Development commands
 
-Ye tumhare liye, users ke liye nahi.
+These are for **you as the developer**, not for users.
 
-| Command | Kya karta hai | Kab chalana hai |
-|---|---|---|
-| `node run.js` | App chalao | Har baar |
-| `node --test` | Saare 174 tests | **Har change ke baad** |
-| `node verify-zero-dep.js` | Zero-dependency proof | Test ke saath auto chalta hai |
-| `npm test` | Upar ke dono ek saath | Commit se pehle |
-| `node tools/preflight/network-check.js` | Network capabilities check | Nayi machine pe |
+| Command                                 | What it does                    | When to run it                    |
+| --------------------------------------- | ------------------------------- | --------------------------------- |
+| `node run.js`                           | Runs the app                    | Every time                        |
+| `node --test`                           | Runs all 174 tests              | **After every change**            |
+| `node verify-zero-dep.js`               | Proves zero dependencies        | Runs automatically with the tests |
+| `npm test`                              | Runs both of the above together | Before committing                 |
+| `node tools/preflight/network-check.js` | Checks network capabilities     | On a new machine                  |
 
-**Tests aise dikhne chahiye:**
-```
+**Tests should look like this:**
+
+```text
 # tests 174
 # pass 174
 # fail 0
 ```
 
-**Zero-dep check aisa:**
-```
+**Zero-dependency check should look like this:**
+
+```text
     files scanned.........   88
       └─ third-party......  000  OK
   🏆 ZERO DEPENDENCY VERIFIED
@@ -482,136 +535,132 @@ Ye tumhare liye, users ke liye nahi.
 
 ---
 
-## Part 10 · Kuch kaam na kare to
+## Part 10 · If something does not work
 
-| Problem | Wajah | Fix |
-|---|---|---|
-| Browser me purana version dikh raha hai | Browser ne JS cache kar liya | **`Ctrl+Shift+R`** (hard refresh) |
-| Byte editor keys kaam nahi kar rahe | Tier 3 pe nahi ho | `3` dabao |
-| Byte editor phir bhi nahi | `Received` tab select hai | `→ Sent` tab pe click karo |
-| Typing se tier badal jaata hai | Koi byte selected nahi hai | Pehle tree ya hex me kisi field pe click karo |
-| `port busy` | Purana server chal raha hai | `node run.js --port 7900` |
-| `dig` timeout | Network UDP 53 block kar raha hai | `doctor` chalao — wo batayega |
-| `tracert` bahut slow | Normal hai, 30 sec lagte hain | `tracert 1.1.1.1 8` (kam hops) |
-| Canvas khaali | Abhi koi command nahi chalayi | `dig facebook.com` |
-| Terminal bahut chhota | Pehle drag kar diya tha | Grip pe **double-click** |
-| Output upar scroll ho gaya | Terminal chhota hai | Grip drag karke bada karo |
+| Problem                         | Reason                                 | Fix                                         |
+| ------------------------------- | -------------------------------------- | ------------------------------------------- |
+| Browser shows the old version   | Browser cached the JavaScript          | **`Ctrl+Shift+R`** (hard refresh)           |
+| Byte editor keys do not work    | You are not on tier 3                  | Press `3`                                   |
+| Byte editor still does not work | `Received` tab is selected             | Click the `→ Sent` tab                      |
+| Typing changes the tier         | No byte is selected                    | First click a field in the tree or hex view |
+| `port busy`                     | An old server is running               | `node run.js --port 7900`                   |
+| `dig` times out                 | Network is blocking UDP 53             | Run `doctor` — it will tell you             |
+| `tracert` is very slow          | This is normal; it can take 30 seconds | `tracert 1.1.1.1 8` (fewer hops)            |
+| Canvas is empty                 | No command has been run yet            | `dig facebook.com`                          |
+| Terminal is too small           | It was resized earlier                 | **Double-click** the grip                   |
+| Output has scrolled upward      | Terminal is too small                  | Drag the grip to make it larger             |
 
-> 🔑 **Sabse common problem: browser cache.** Maine jo bhi code badla, wo dikhne
-> ke liye **`Ctrl+Shift+R`** dabana padta hai. Normal refresh (`F5`) kaafi nahi hai.
+> 🔑 **Most common problem: browser cache.** Whenever you change the code, you need to press **`Ctrl+Shift+R`** for the changes to appear. A normal refresh (`F5`) is not enough.
 
 ---
 
-## Part 11 · Project ka structure — kaunsi file kya karti hai
+## Part 11 · Project structure — what each file does
 
-```
+```text
 zero-dep/
-├── run.js                    ← APP CHALANE KI FILE
+├── run.js                    ← FILE USED TO RUN THE APP
 ├── verify-zero-dep.js        ← zero-dependency proof
-├── package.json              ← "dependencies": {} (khaali)
+├── package.json              ← "dependencies": {} (empty)
 │
 ├── src/                      ═══ SERVER (Node) ═══
 │   ├── server/               HTTP server, routes, SSE
 │   ├── proto/
 │   │   ├── dns.js            ⭐ DNS codec — bytes ↔ object
-│   │   └── dns-client.js     UDP se asli packet bhejta hai
+│   │   └── dns-client.js     Sends real packets over UDP
 │   ├── sys/
-│   │   ├── exec.js           🛡️ OS commands safely chalata hai
-│   │   ├── netinfo.js        ipconfig/arp/route parse
-│   │   ├── ping.js           ping parse (3 platforms)
-│   │   └── trace.js          traceroute parse
-│   ├── api/                  har endpoint ka handler
+│   │   ├── exec.js           🛡️ Safely runs OS commands
+│   │   ├── netinfo.js        Parses ipconfig/arp/route
+│   │   ├── ping.js           Parses ping (3 platforms)
+│   │   └── trace.js          Parses traceroute
+│   ├── api/                  Handler for every endpoint
 │   └── shared/
 │       ├── bytes.js          Reader/Writer, hex helpers
-│       ├── explain.js        ⭐ har field ka matlab (yahan text edit karo)
-│       └── narrate.js        ⭐ narration lines (yahan bhi)
+│       ├── explain.js        ⭐ Meaning of every field (edit text here)
+│       └── narrate.js        ⭐ Narration lines (here too)
 │
 ├── web/                      ═══ BROWSER ═══
-│   ├── index.html            page ka structure
+│   ├── index.html            Page structure
 │   ├── css/                  theme.css (colors) + app.css (layout)
 │   └── js/
-│       ├── main.js           sab wire karta hai
-│       ├── state.js          60-line store (React ki jagah)
-│       ├── term/             ⭐ terminal + COMMANDS (nayi command yahan)
-│       ├── viz/              canvas, animation
-│       └── inspect/          tree, hex, bits, ⭐ editor
+│       ├── main.js           Connects everything
+│       ├── state.js          60-line store (instead of React)
+│       ├── term/             ⭐ Terminal + COMMANDS (add new commands here)
+│       ├── viz/              Canvas, animation
+│       └── inspect/          Tree, hex, bits, ⭐ editor
 │
 ├── test/                     174 tests + fixtures
-└── docs/                     poora plan (00 se 07 tak)
+└── docs/                     Complete plan (00 through 07)
 ```
 
-**Text badalna hai to sirf do files:**
-- `src/shared/explain.js` — field explanations
-- `src/shared/narrate.js` — timeline narration
+**If you want to change text, you only need two files:**
 
-**Nayi command add karni hai:**
-- `web/js/term/commands.js` — `COMMANDS` object me ek entry
+* `src/shared/explain.js` — field explanations
+* `src/shared/narrate.js` — timeline narration
+
+**If you want to add a new command:**
+
+* `web/js/term/commands.js` — add an entry to the `COMMANDS` object
 
 ---
 
-## Part 12 · Abhi kya ban chuka hai
+## Part 12 · What has been built so far
 
-| Chapter | Status | Commands |
-|---|---|---|
-| 01 · YOUR_OWN_NETWORK | ✅ **Done** | `ifconfig` `arp` `route` `netstat` `ping` |
-| 02 · NAMES_TO_NUMBERS | ✅ **Done** | `dig` `resolvers` + **byte editor** |
-| 03 · FINDING_THE_PATH | ✅ **Done** | `tracert` (live) |
-| 04 · RELIABLE_OR_FAST | ⬜ Baaki | — |
-| 05 · THE_LOCK | ✅ **Done** | `tls` + SNI swap |
-| 06 · ASKING_FOR_A_PAGE | ⬜ Baaki | — |
-| 07 · THE_FULL_JOURNEY | ⬜ Baaki | — |
-| 08 · IT_WAS_LAYERS | ⬜ Baaki | — |
+| Chapter                | Status      | Commands                                  |
+| ---------------------- | ----------- | ----------------------------------------- |
+| 01 · YOUR_OWN_NETWORK  | ✅ **Done**  | `ifconfig` `arp` `route` `netstat` `ping` |
+| 02 · NAMES_TO_NUMBERS  | ✅ **Done**  | `dig` `resolvers` + **byte editor**       |
+| 03 · FINDING_THE_PATH  | ✅ **Done**  | `tracert` (live)                          |
+| 04 · RELIABLE_OR_FAST  | ⬜ Remaining | —                                         |
+| 05 · THE_LOCK          | ✅ **Done**  | `tls` + SNI swap                          |
+| 06 · ASKING_FOR_A_PAGE | ⬜ Remaining | —                                         |
+| 07 · THE_FULL_JOURNEY  | ⬜ Remaining | —                                         |
+| 08 · IT_WAS_LAYERS     | ⬜ Remaining | —                                         |
 
-**Ban chuka:** 174 tests, 0 dependencies, byte editor, live traceroute,
-4 zoom levels, terminal, canvas.
+**Already built:** 174 tests, 0 dependencies, byte editor, live traceroute, 4 zoom levels, terminal, and canvas.
 
-**Abhi baaki:** Chapter 4–8, lesson engine (Story/Do it/Real bytes ka actual
-content), `build.js` (single file bonus), README, STDLIB.md, demo video.
+**Still remaining:** Chapters 4–8, lesson engine (actual Story/Do It/Real Bytes content), `build.js` (single-file bonus), README, STDLIB.md, and demo video.
 
-> ⚠️ **Note:** Sidebar me chapters 4-8 dikhte hain par unka content abhi nahi hai.
-> Wo click karoge to layout to badlega, par koi lesson nahi milega. Wo agle
-> blocks me banega.
+> ⚠️ **Note:** Chapters 4–8 are visible in the sidebar, but their content does not exist yet.
+> If you click them, the layout will change, but there will be no lesson. They will be built in the next blocks.
 
 ---
 
-## Part 13 · Demo ke liye cheat sheet
+## Part 13 · Cheat sheet for the demo
 
-Video record karte waqt yahi sequence:
+Use this exact sequence when recording the video:
 
-```
-1.  ifconfig                    "ye mera asli laptop hai"
-2.  arp                         "ye kisi ka phone hai mere Wi-Fi pe"
-3.  dig facebook.com            "28 bytes abhi gaye"
-4.  [3 dabao]                   tier 3 — hex dikhao
-5.  QTYPE pe click              explanation box dikhao
-6.  0 0 → 1 c                   "QTYPE badal gaya, abhi bheja nahi"
-7.  r                           🔥 face:b00c wala IPv6
-8.  dig facebook.com            fresh
-9.  ID pe click, 7f 3e, r       🔥 REJECTED
+```text
+1.  ifconfig                    "this is my actual laptop"
+2.  arp                         "this is someone's phone on my Wi-Fi"
+3.  dig facebook.com            "28 bytes just went out"
+4.  [press 3]                   tier 3 — show the hex
+5.  Click QTYPE                show the explanation box
+6.  0 0 → 1 c                  "QTYPE changed, but it hasn't been sent yet"
+7.  r                           🔥 face:b00c IPv6
+8.  dig facebook.com            fresh request
+9.  Click ID, 7f 3e, r          🔥 REJECTED
 10. tracert 1.1.1.1 8           live hops + silent router
-11. tls medium.com --no-sni     server mana kar deta hai
-12. tls medium.com --sni discord.com    🔥 Discord ka certificate
+11. tls medium.com --no-sni     server rejects it
+12. tls medium.com --sni discord.com    🔥 Discord certificate
 13. node verify-zero-dep.js     🏆 ZERO DEPENDENCY VERIFIED
 ```
 
-**Recording ke liye:** browser window **1440px se choti mat karo** — 1100px se
-neeche sidebar hide ho jaata hai.
+**For recording:** Do not make the browser window smaller than **1440px** — below 1100px, the sidebar gets hidden.
 
 ---
 
-## Part 14 · Aage kya
+## Part 14 · What's next
 
-Mujhe bolo:
+Tell me:
 
-| Bolo | Main karunga |
-|---|---|
-| `block 9` | HTTP + full journey (Ch 6 + Ch 7) |
-| `block 10` | Ch 4 (TCP/UDP) + Ch 8 (layers) |
-| `lesson engine` | Story/Do it/Real bytes ka actual content |
-| `readme` | README + STDLIB.md + dependency proof |
-| `build` | Single-file build (+10 bonus) |
+| Say             | I will do                             |
+| --------------- | ------------------------------------- |
+| `block 9`       | HTTP + full journey (Ch 6 + Ch 7)     |
+| `block 10`      | Ch 4 (TCP/UDP) + Ch 8 (layers)        |
+| `lesson engine` | Actual Story/Do It/Real Bytes content |
+| `readme`        | README + STDLIB.md + dependency proof |
+| `build`         | Single-file build (+10 bonus)         |
 
 ---
 
-**Kuch samajh na aaye to seedha poochho.** Ye tutorial tumhare liye hai —
-jo hissa confusing lage, bolo, main usko phir se likh dunga.
+
