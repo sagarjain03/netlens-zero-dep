@@ -56,6 +56,17 @@
     </div>
 
     <div class="side__foot">
+      <!-- The one place in the app that leaves the chapters. A plain <a>, not a
+           router entry: the builder is a separate document with its own CSS. -->
+      <a class="sidelink" href="/builder" title="Build a network and run packets through it">
+        <span class="sidelink__mark" aria-hidden="true">&#8961;</span>
+        <span class="sidelink__body">
+          <span class="sidelink__name">NETWORK_BUILDER</span>
+          <span class="sidelink__meta">drag devices &middot; wire them &middot; send packets</span>
+        </span>
+        <span class="sidelink__go" aria-hidden="true">&rarr;</span>
+      </a>
+
       <div class="statblock">
         <div class="statblock__mark">0</div>
         <div class="statblock__body">

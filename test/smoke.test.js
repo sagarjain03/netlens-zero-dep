@@ -54,6 +54,19 @@ describe('server', () => {
     }
   })
 
+  test('an extensionless page URL resolves to its .html', async () => {
+    const res = await fetch(`${base}/builder`)
+    assert.equal(res.status, 200)
+    assert.match(res.headers.get('content-type'), /text\/html/)
+    assert.match(await res.text(), /<title>netlens . network builder/)
+  })
+
+  test('the shell links to the builder by that clean URL', async () => {
+    const html = await fetch(`${base}/`).then((r) => r.text())
+    assert.match(html, /class="sidelink" href="\/builder"/,
+      'the sidebar way out to the builder must survive a refactor')
+  })
+
   test('unknown /api/* returns a JSON 404, not the shell', async () => {
     const res = await fetch(`${base}/api/nope`)
     assert.equal(res.status, 404)

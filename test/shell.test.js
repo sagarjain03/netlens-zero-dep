@@ -9,7 +9,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync, existsSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
@@ -32,7 +32,10 @@ describe('shell contract', () => {
 
   test('every local asset referenced by index.html exists on disk', () => {
     const refs = [...html.matchAll(/(?:href|src)="(\/[^"]+)"/g)].map((m) => m[1])
-    const missing = refs.filter((r) => !existsSync(join(ROOT, 'web', r)))
+    // An extensionless href is a clean URL, resolved exactly as static.js
+    // resolves it: /builder is web/builder.html.
+    const onDisk = (r) => existsSync(join(ROOT, 'web', extname(r) ? r : `${r}.html`))
+    const missing = refs.filter((r) => !onDisk(r))
     assert.deepEqual(missing, [], `index.html references files that do not exist: ${missing}`)
   })
 

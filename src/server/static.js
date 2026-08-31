@@ -41,11 +41,16 @@ export function createStaticHandler({ root, assets = null }) {
       return true
     }
 
-    const type = MIME[extname(clean)] ?? 'application/octet-stream'
+    // Clean URLs: an extensionless path is a page, so /builder finds
+    // builder.html. Matches Vercel's `cleanUrls`, so a link that works locally
+    // works deployed. Assets always carry an extension and are untouched.
+    const file = extname(clean) ? clean : `${clean}.html`
+
+    const type = MIME[extname(file)] ?? 'application/octet-stream'
 
     // ── bundled mode ────────────────────────────────────────────────────────
     if (assets) {
-      const body = assets.get(clean) ?? assets.get(clean.replace(/^\//, ''))
+      const body = assets.get(file) ?? assets.get(file.replace(/^\//, ''))
       if (body === undefined) return false
       const buf = Buffer.from(body, 'utf8')
       res.writeHead(200, {
@@ -58,7 +63,7 @@ export function createStaticHandler({ root, assets = null }) {
     }
 
     // ── dev mode ────────────────────────────────────────────────────────────
-    const full = join(root, clean)
+    const full = join(root, file)
     try {
       const info = await stat(full)
       if (!info.isFile()) return false

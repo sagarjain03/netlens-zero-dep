@@ -232,6 +232,28 @@ We would rather say these plainly than have you discover them.
 
 ---
 
+## Deploying it (Vercel)
+
+The app is a Node server, not a static site, so a deploy needs both halves:
+`web/` goes to the CDN and one serverless function runs the router. `vercel.json`
+and `api/index.js` do exactly that and nothing more — the function borrows the
+request listener `createApp()` already builds, so routes are declared in one
+place and adding an endpoint to `src/server/server.js` lights it up in both.
+
+    vercel deploy
+
+Set `GROQ_API_KEY` in the project's environment variables if you want the doubt
+box to answer beyond the built-in glossary; without it the box still works.
+
+Two chapters lose a feature there, for a reason worth knowing: a serverless
+container has no `ping` and no `traceroute` binary, and no way to run one. The
+ICMP parts of Chapters 1 and 3 report the tool as unavailable. Everything that
+speaks a protocol from a socket — DNS, TLS, HTTP, the full journey — runs on
+Vercel exactly as it runs locally. `node run.js` on a real machine remains the
+complete experience.
+
+---
+
 ## Requirements
 
 Node **20 or newer**. Nothing else. No install step, because there is nothing to

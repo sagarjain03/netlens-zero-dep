@@ -180,6 +180,41 @@
 .tier[data-tier="3"] .tier__dot { background: var(--tier-3); }
 .tier__hint { margin-left: auto; color: var(--fg-2); font-size: 9px; letter-spacing: 0.08em; }
 
+/* the way out to the builder, pinned above the zero-dependency block */
+.sidelink {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--line);
+  color: var(--fg-1);
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.sidelink:hover { background: var(--accent-soft); color: var(--fg); }
+.sidelink__mark {
+  width: 38px; flex: none;
+  display: grid; place-items: center;
+  font-size: 16px;
+  color: var(--accent);
+  border-right: 1px solid var(--line);
+}
+.sidelink__body { padding: var(--sp-2) var(--sp-3); min-width: 0; }
+.sidelink__name { display: block; font-size: 9.5px; letter-spacing: 0.12em; }
+.sidelink__meta {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.sidelink__go {
+  margin-left: auto;
+  display: grid; place-items: center;
+  padding-right: var(--sp-3);
+  font-size: 12px;
+  color: var(--fg-2);
+  transition: transform var(--t-fast), color var(--t-fast);
+}
+.sidelink:hover .sidelink__go { transform: translateX(2px); color: var(--accent); }
+
 /* the zero-dependency block, pinned to the foot of the rail */
 .side__foot { margin-top: auto; border-top: 1px solid var(--line); }
 .statblock { display: flex; align-items: stretch; }
