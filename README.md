@@ -584,7 +584,7 @@ away and always has been:
 node run.js
 ```
 
-Use the hosted link to try it. Clone the repository to take the course.
+
 
 ---
 
